@@ -1,25 +1,56 @@
 class TicTacToe
 
+attr_accessor :name
+attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
+
+  def comp_name
+    @comp_name = "Watson"
+  end
+
+  def user_name1
+    @user_name = gets.chomp
+  end
+
+  def user_name2
+    @user_name = @user_name
+  end
+
+  def user_sign
+    if gets.chomp.upcase == "O"
+      @user_sign = "O"
+    else
+      @user_sign = "X"
+    end
+  end
+
+  def comp_sign
+    @user_sign == "X" ? @comp_sign = "O" : "X"
+  end
+
   def display_game_board
-    attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
     @possible_places = {
      a1: @a1,a2: @a2,a3: @a3,
      b1: @b1,b2: @b2,b3: @b3,
-     c1: @c1,c2: @c2,c3: @c3}
+     c1: @c1,c2: @c2,c3: @c3
+   }
+  end
 
-
-      puts "#{@possible_places[:a1]} | #{@possible_places[:a2]} | #{@possible_places[:a3]}"
+def game_board
+      puts "  #{@possible_places[:a1]} | #{@possible_places[:a2]}  | #{@possible_places[:a3]}"
       puts "--- --- ---"
-      puts "#{@possible_places[:b1]} | #{@possible_places[:b2]} | #{@possible_places[:b3]}"
+      puts "  #{@possible_places[:b1]} | #{@possible_places[:b2]}  | #{@possible_places[:b3]}"
       puts "--- --- ---"
-      puts "#{@possible_places[:c1]} | #{@possible_places[:c2]} | #{@possible_places[:c3]}"
+      puts "  #{@possible_places[:c1]} | #{@possible_places[:c2]}  | #{@possible_places[:c3]}"
   end
 
    def user_turn
     input=gets.chomp.to_sym
-    @possible_places[input] = 's'
-    puts display_game_board
+    @possible_places[input] = @user_sign
+    game_board
   end
 
+  def list_avail_spots_for_user
+
+  end
 
 end

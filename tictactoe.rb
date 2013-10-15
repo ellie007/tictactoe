@@ -1,27 +1,18 @@
 load 'tictactoedef.rb'
 
-@comp_name = "Watson"
-
-puts 'Hello, I\'m Watson, let\'s play Tic Tac Toe!  What is your name?'
-@user_name = gets.chomp
-puts "Great " + @user_name + ", do you want to be X's or O's?"
-
-    if gets.chomp.upcase == "O"
-      @user_sign = "O"
-      @comp_sign = "X"
-    else
-      @user_sign = "X"
-      @comp_sign = "O"
-    end
-
-puts 'Okay ' + @user_name + ', you\'ll be ' + @user_sign + '.  Please choose where you want to go.'
-
-
-
 n = TicTacToe.new
+
+puts 'Hello, I\'m ' + n.comp_name + ', let\'s play Tic Tac Toe!  What is your name?'
+
+puts "Great " + n.user_name1 + ", do you want to be X's or O's?"
+
+puts 'Okay ' + n.user_name2 + ', you\'ll be ' + n.user_sign + '.  Please choose where you want to go.'
+
+
 
 n.display_game_board
 n.user_turn
+n.comp_turn
 
 
 
