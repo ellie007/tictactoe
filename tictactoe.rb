@@ -15,15 +15,10 @@ puts ' b1 | b2 | b3'
 puts " --- --- ---"
 puts ' c1 | c2 | c3'
 
-
-
-
+n.game_board
 
 while n.comp_win != true do
-n.display_game_board
-n.user_turn
-n.comp_turn
+  n.user_turn
+  n.comp_turn
 end
-
-
 

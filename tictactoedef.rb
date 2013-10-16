@@ -1,8 +1,7 @@
 class TicTacToe
 
 attr_accessor :name
-attr_accessor :user_sign, :comp_sign
-attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
+attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3, :possible_places
 
   def comp_name
     @comp_name = "Watson"
@@ -28,7 +27,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
     @user_sign == "X" ? @comp_sign = "O" : "X"
   end
 
-  def display_game_board
+  def game_board
     @possible_places = {
     a1: @a1,a2: @a2,a3: @a3,
     b1: @b1,b2: @b2,b3: @b3,
@@ -36,7 +35,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
    }
   end
 
-  def game_board
+  def display_game_board
     puts "  #{@possible_places[:a1]} | #{@possible_places[:a2]}  | #{@possible_places[:a3]}"
     puts "--- --- ---"
     puts "  #{@possible_places[:b1]} | #{@possible_places[:b2]}  | #{@possible_places[:b3]}"
@@ -47,7 +46,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
   def user_turn
     input=gets.chomp.to_sym
     @possible_places[input] = @user_sign
-    game_board
+    display_game_board
   end
 
   def comp_turn
@@ -64,7 +63,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
     random_array_hash_value = only_nil_valued_hash.sample
     move = random_array_hash_value.first
     @possible_places[move] = @comp_sign
-    game_board
+    display_game_board
   end
 
   def comp_win
