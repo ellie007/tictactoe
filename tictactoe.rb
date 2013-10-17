@@ -16,9 +16,9 @@ puts " --- --- ---"
 puts ' c1 | c2 | c3'
 
 n.game_board
+n.winning_propositions
 
 while n.comp_win != true do
   n.user_turn
   n.comp_turn
 end
-
