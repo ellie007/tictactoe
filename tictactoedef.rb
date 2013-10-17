@@ -1,7 +1,6 @@
 class TicTacToe
 
-attr_accessor :name
-attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3, :possible_places
+attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
 
   def comp_name
     @comp_name = "Watson"
@@ -46,23 +45,29 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3, :possible_places
   def user_turn
     input=gets.chomp.to_sym
     @possible_places[input] = @user_sign
+    puts @user_name + " made the move: #{input}"
     display_game_board
   end
 
   def comp_turn
-    #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
+        #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
             if @user_sign == 'X'
               @comp_sign = 'O'
             else
               @comp_sign = 'X'
             end
+  #comp find a spot with one already
+    hash_to_array = @possible_places.to_a
+    only_comp_sign_valued_hash = hash_to_array.select {|key, value| value==@comp_sign}
+    only_comp_sign_valued_hash
 
-#comp find random place
+  #comp find random place
     hash_to_array = @possible_places.to_a
     only_nil_valued_hash = hash_to_array.select {|key, value| value==nil}
     random_array_hash_value = only_nil_valued_hash.sample
     move = random_array_hash_value.first
     @possible_places[move] = @comp_sign
+    puts @comp_name + " made the move: #{move}"
     display_game_board
   end
 
