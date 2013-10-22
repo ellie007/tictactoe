@@ -77,7 +77,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
               @comp_sign = 'X'
             end
 
-   #comp find a spot with two of its spots already
+ # comp find a spot with two of its spots already
  # one = @winning_propositions.map { |big_win_prop| big_win_prop.select { |key, value| value == @comp_sign }}
  # two = one.first.values.count(@comp_sign)
  # three = @winning_propositions.map { |big_win_prop| big_win_prop.select { |key, value| value == nil }}
@@ -88,8 +88,6 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
  #   @possible_places[five] = @comp_sign
  #   puts "Eleanor"
 
-
-
   #comp find random place
     hash_to_array = @possible_places.to_a
     only_nil_valued_hash = hash_to_array.select {|key, value| value==nil}
@@ -98,7 +96,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
     @possible_places[move] = @comp_sign
     puts @comp_name + " made the move: #{move}"
 
-  #changes the winning props values in parallel
+  #changes the winning prop values in parallel
     list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(move.to_s) }
       list_of_matching_arrays.each do |change_hash_value|
         change_hash_value[move] = @comp_sign
@@ -107,10 +105,17 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
     display_game_board
   end
 
-   def comp_win
-      a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == "O" } }
+  def comp_win
+    #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
+            if @user_sign == 'X'
+              @comp_sign = 'O'
+            else
+              @comp_sign = 'X'
+            end
+
+      a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign } }
       b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
-      b.each { |number_count| puts 'I, Watson, have won.  Better luck next time.' if number_count == 3 }
-     end
+      b.each { |number_count| puts 'I, Watson, have won.  Better luck next time. :)' if number_count == 3 }
+  end
 
 end
