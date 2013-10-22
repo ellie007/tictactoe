@@ -77,31 +77,18 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
               @comp_sign = 'X'
             end
 
-  #comp find a spot with two spots already
-    # @winning_propositions.each do |prop|
-    #   if how_many_times_in_winning_line(prop, @cpu_sign) == 2
-    #     return prop
-    #   end
-    # end
+   #comp find a spot with two of its spots already
+ # one = @winning_propositions.map { |big_win_prop| big_win_prop.select { |key, value| value == @comp_sign }}
+ # two = one.first.values.count(@comp_sign)
+ # three = @winning_propositions.map { |big_win_prop| big_win_prop.select { |key, value| value == nil }}
+ # four = three.first.values.count(nil)
 
-    # # see if user can win
-    # #see if any columns already have 2 (user)
-    # @winning_propositions.each do |column|
-    #   if how_many_times_in_winning_line(column, @user_sign) == 2
-    #     return empty_in_column column
-    #   end
-    # end
+ #   five = three.first.first.first
+ #   @winning_propositions[0][five] = @comp_sign
+ #   @possible_places[five] = @comp_sign
+ #   puts "Eleanor"
 
-    # #see if any columns aready have 1 (cpu)
-    # @winning_propositions.each do |column|
-    #   if how_many_times_in_winning_line(column, @cpu_sign) == 1
-    #     return empty_in_column column
-    #   end
-    # end
 
-    # hash_to_array = @possible_places.to_a
-    # only_comp_sign_valued_hash = hash_to_array.select {|key, value| value==@comp_sign}
-    # only_comp_sign_valued_hash
 
   #comp find random place
     hash_to_array = @possible_places.to_a
@@ -110,29 +97,20 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
     move = random_array_hash_value.first
     @possible_places[move] = @comp_sign
     puts @comp_name + " made the move: #{move}"
-    display_game_board
 
+  #changes the winning props values in parallel
     list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(move.to_s) }
       list_of_matching_arrays.each do |change_hash_value|
-        change_hash_value[move]=@comp_sign
+        change_hash_value[move] = @comp_sign
       end
+
+    display_game_board
   end
 
-
-  # def how_many_times_in_winning_line(lines, sign)
-  #   times = 0
-  #   lines.each do |line|
-  #     times += 1 if @possible_places[line] == sign
-  #       unless @possible_places[line] == sign || @possible_places[line] == nil
-  #         retu
-
-  #     end
-  #   end
-  #   times
-  # end
-
-
-  def comp_win
-  end
+   def comp_win
+      a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == "O" } }
+      b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
+      b.each { |number_count| puts 'I, Watson, have won.  Better luck next time.' if number_count == 3 }
+     end
 
 end
