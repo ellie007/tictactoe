@@ -22,3 +22,7 @@ while n.comp_win != true do
   n.user_turn
   n.comp_turn
 end
+
+
+
+
