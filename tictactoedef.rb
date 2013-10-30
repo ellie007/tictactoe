@@ -67,6 +67,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
       list_of_matching_arrays.each do |change_hash_value|
         change_hash_value[input]=@user_sign
       end
+       #print @winning_propositions
   end
 
 #comp find random place
@@ -83,7 +84,7 @@ attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
             list_of_matching_arrays.each do |change_hash_value|
               change_hash_value[move] = @comp_sign
           end
-puts "Harry"
+    #puts "Harry"
     display_game_board
     end
 
@@ -92,6 +93,40 @@ puts "Harry"
             @user_sign == "X" ? @comp_sign = "O" : "X"
 
  # comp find a spot with two of its spots already
+
+    only_user_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign }}
+    count_of_each = only_user_valued.map { |count_the_items_in_hash| count_the_items_in_hash.count }
+      if count_of_each.include?(2) == true
+        indexed_hashed = Hash[count_of_each.map.with_index.to_a]
+        indexed_value = indexed_hashed[2]
+          if @winning_propositions[indexed_value].has_value?(nil)
+            nil_valued = @winning_propositions[indexed_value].select { |key, value| value == nil }
+            the_symbol = nil_valued.first.first
+            #@winning_propositions[indexed_value][the_symbol] = @comp_sign
+            @possible_places[the_symbol] = @comp_sign
+
+            #changes the winning prop values in parallel
+          list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(the_symbol.to_s) }
+            list_of_matching_arrays.each do |change_hash_value|
+               change_hash_value[the_symbol] = @comp_sign
+            end
+
+            puts @comp_name + " made the move: #{the_symbol}"
+            display_game_board
+            #print @winning_propositions
+            comp_win
+            #puts "BLOCKED!"
+          else
+            comp_find
+            #puts "ONE"
+          end
+        else
+          comp_find
+          #puts "TWO"
+        end
+      end
+
+def comp_find
     only_comp_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign }}
     count_of_each = only_comp_valued.map { |count_the_items_in_hash| count_the_items_in_hash.count }
       if count_of_each.include?(2) == true
@@ -100,20 +135,28 @@ puts "Harry"
           if @winning_propositions[indexed_value].has_value?(nil)
               nil_valued = @winning_propositions[indexed_value].select { |key, value| value == nil }
               the_symbol = nil_valued.first.first
-              @winning_propositions[indexed_value][the_symbol] = @comp_sign
+              #@winning_propositions[indexed_value][the_symbol] = @comp_sign
               @possible_places[the_symbol] = @comp_sign
 
+        #changes the winning prop values in parallel
+          list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(the_symbol.to_s) }
+            list_of_matching_arrays.each do |change_hash_value|
+               change_hash_value[the_symbol] = @comp_sign
+             end
+
+              puts @comp_name + " made the move: #{the_symbol}"
           puts "Lucy"
           display_game_board
+           #print @winning_propositions
           else
             random_move
+            #puts "THREE"
           end
         else
           random_move
+          #puts "FOUR"
         end
-      end
-
-
+  end
 
   def comp_win
     #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
