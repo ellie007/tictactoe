@@ -58,15 +58,23 @@ class TicTacToe
     end
 
   def user_turn
-    input=gets.chomp.to_sym
+    input = gets.chomp.downcase.to_sym
+      case input
+        when 'a1'.to_sym, 'a2'.to_sym, 'a3'.to_sym, 'b1'.to_sym, 'b2'.to_sym, 'b3'.to_sym, 'c1'.to_sym, 'c2'.to_sym, 'c3'.to_sym
+        @possible_places[input] = @user_sign
+        puts @user_name + " made the move: #{input}"
+        display_game_board
 
-    @possible_places[input] = @user_sign
-    puts @user_name + " made the move: #{input}"
-    display_game_board
+      list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
+        list_of_matching_arrays.each do |change_hash_value|
+          change_hash_value[input] = @user_sign
+        end
 
-    list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
-      list_of_matching_arrays.each do |change_hash_value|
-        change_hash_value[input]=@user_sign
+      else
+        puts "Please respond in the format of e.g.; a1, c2, etc."
+        print input
+        print input.class
+        user_turn
       end
   end
 
@@ -111,7 +119,7 @@ puts "I picked the center"
 
   def fork_detection
     second_turn_check = @possible_places.select { |key, value| value == "@user_sign" }
-      if second_turn_check.length == 2
+
         @corners = {a1:@a1, a3:@a3, c1:@c1, c3:@c3}
         fork_check = second_turn_check.keys & @corners.keys
         kitty_corner_check = [:a1, :a3], [:a3, :c3]
@@ -119,19 +127,19 @@ puts "I picked the center"
         @winning_propositions.select { |key, value| key == kitty_confirm }
           if kitty_confirm.shift == [:a1, :a3] || [:a3, :c3]
             side_middle = {a2:@a2, b3:@b3, c2:@c2, b1:@b1}.keys.sample
-            @possible_places[side] = @comp_sign
-            puts @comp_name + " made the move: #{:b2}"
+            @possible_places[side_middle] = @comp_sign
+            puts @comp_name + " made the move: #{side_middle}"
           display_game_board
 puts "Fork Detected-Kitty Style!"
 
           #changes the winning prop values in parallel
-          list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(side.to_s) }
+          list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(side_middle.to_s) }
             list_of_matching_arrays.each do |change_hash_value|
               change_hash_value[:b2] = @comp_sign
             end
 
           end
-        end
+
   end
 
   def random_move
@@ -153,7 +161,6 @@ puts "Fork Detected-Kitty Style!"
       end
     display_game_board
 puts "I picked a random spot by way of the random move method"
-print @winning_propositions
     end
 
   def comp_find
