@@ -61,20 +61,23 @@ class TicTacToe
     input = gets.chomp.downcase.to_sym
       case input
         when 'a1'.to_sym, 'a2'.to_sym, 'a3'.to_sym, 'b1'.to_sym, 'b2'.to_sym, 'b3'.to_sym, 'c1'.to_sym, 'c2'.to_sym, 'c3'.to_sym
-        @possible_places[input] = @user_sign
-        puts @user_name + " made the move: #{input}"
-        display_game_board
+          if @possible_places[input] != nil
+            puts "Spot is occupied, please choose an empty space."
+            user_turn
+          else
+            @possible_places[input] = @user_sign
+            puts @user_name + " made the move: #{input}"
+            display_game_board
 
       list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
         list_of_matching_arrays.each do |change_hash_value|
           change_hash_value[input] = @user_sign
         end
+          end
 
-      else
-        puts "Please respond in the format of e.g.; a1, c2, etc."
-        print input
-        print input.class
-        user_turn
+        else
+          puts "Please respond in the format of e.g.; a1, c2, etc."
+          user_turn
       end
   end
 
@@ -101,6 +104,7 @@ puts "I picked a corner"
           puts @comp_name + " made the move: #{:b2}"
           display_game_board
 puts "I picked the center"
+print @possible_placesx
 
           #changes the winning prop values in parallel
           list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(:b2.to_s) }
@@ -111,6 +115,7 @@ puts "I picked the center"
         end
       elsif first_turn_check.length == 2
          fork_detection
+puts "I am preceding to do the fork detection method."
       else
         comp_find
       end
@@ -118,28 +123,25 @@ puts "I picked the center"
 
 
   def fork_detection
-    second_turn_check = @possible_places.select { |key, value| value == "@user_sign" }
-
-        @corners = {a1:@a1, a3:@a3, c1:@c1, c3:@c3}
-        fork_check = second_turn_check.keys & @corners.keys
-        kitty_corner_check = [:a1, :a3], [:a3, :c3]
-        kitty_confirm = [fork_check] & kitty_corner_check
-        @winning_propositions.select { |key, value| key == kitty_confirm }
-          if kitty_confirm.shift == [:a1, :a3] || [:a3, :c3]
-            side_middle = {a2:@a2, b3:@b3, c2:@c2, b1:@b1}.keys.sample
-            @possible_places[side_middle] = @comp_sign
-            puts @comp_name + " made the move: #{side_middle}"
-          display_game_board
+    second_turn_check = @possible_places.select { |key, value| value == @user_sign }
+    @corners = {a1:@a1, a3:@a3, c1:@c1, c3:@c3}
+    kitty_fork_check = second_turn_check.keys & @corners.keys
+      if kitty_fork_check == [:a1, :c3] || kitty_fork_check == [:a3, :c1]
+        side_middle = {a2:@a2, b3:@b3, c2:@c2, b1:@b1}.keys.sample
+        @possible_places[side_middle] = @comp_sign
+        puts @comp_name + " made the move: #{side_middle}"
+        display_game_board
 puts "Fork Detected-Kitty Style!"
-
-          #changes the winning prop values in parallel
-          list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(side_middle.to_s) }
-            list_of_matching_arrays.each do |change_hash_value|
-              change_hash_value[:b2] = @comp_sign
-            end
-
+print kitty_fork_check
+print @corners
+        #changes the winning prop values in parallel
+        list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(side_middle.to_s) }
+          list_of_matching_arrays.each do |change_hash_value|
+            change_hash_value[:b2] = @comp_sign
           end
-
+      else
+          comp_find
+      end
   end
 
   def random_move
@@ -222,7 +224,8 @@ puts "Did not meet the condition of two of the opponents."
             puts @comp_name + " made the move: #{the_symbol}"
             display_game_board
 puts "Here I am defending/BLOCKED!"
-print @winning_propositions
+print @possible_places
+
 #__________________________________________________________________________
           else
             random_move
