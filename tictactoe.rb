@@ -20,10 +20,11 @@ puts ' c1 | c2 | c3'
 n.game_board
 n.winning_propositions
 
-while n.comp_win != true do
+while n.comp_win != true do #|| n.player_win == true || n.draw_game == true do
   n.user_turn
   n.player_first_move_or_second_move
 end
+
 
 
 

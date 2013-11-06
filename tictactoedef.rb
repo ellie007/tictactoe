@@ -74,7 +74,6 @@ class TicTacToe
           change_hash_value[input] = @user_sign
         end
           end
-
         else
           puts "Please respond in the format of e.g.; a1, c2, etc."
           user_turn
@@ -104,7 +103,7 @@ puts "I picked a corner"
           puts @comp_name + " made the move: #{:b2}"
           display_game_board
 puts "I picked the center"
-print @possible_placesx
+
 
           #changes the winning prop values in parallel
           list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(:b2.to_s) }
@@ -118,6 +117,7 @@ print @possible_placesx
 puts "I am preceding to do the fork detection method."
       else
         comp_find
+puts "There is more than 2, precede to comp find, not fork."
       end
   end
 
@@ -132,12 +132,11 @@ puts "I am preceding to do the fork detection method."
         puts @comp_name + " made the move: #{side_middle}"
         display_game_board
 puts "Fork Detected-Kitty Style!"
-print kitty_fork_check
-print @corners
+
         #changes the winning prop values in parallel
         list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(side_middle.to_s) }
           list_of_matching_arrays.each do |change_hash_value|
-            change_hash_value[:b2] = @comp_sign
+            change_hash_value[side_middle] = @comp_sign
           end
       else
           comp_find
@@ -145,10 +144,6 @@ print @corners
   end
 
   def random_move
-
-    #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
-    @user_sign == "X" ? @comp_sign = "O" : "X"
-
     hash_to_array = @possible_places.to_a
     only_nil_valued_hash = hash_to_array.select {|key, value| value==nil}
     random_array_hash_value = only_nil_valued_hash.sample
@@ -166,43 +161,59 @@ puts "I picked a random spot by way of the random move method"
     end
 
   def comp_find
-    #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
-    @user_sign == "X" ? @comp_sign = "O" : "X"
-
-    #__________________________________________________________________________
-    only_comp_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign }}
+    only_comp_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign } }
     count_of_each = only_comp_valued.map { |count_the_items_in_hash| count_the_items_in_hash.count }
-      if count_of_each.include?(2) == true
-        indexed_hashed = Hash[count_of_each.map.with_index.to_a]
-        indexed_value = indexed_hashed[2]
-          if @winning_propositions[indexed_value].has_value?(nil)
-            nil_valued = @winning_propositions[indexed_value].select { |key, value| value == nil }
-            the_symbol = nil_valued.first.first
-            @possible_places[the_symbol] = @comp_sign
-
-            #changes the winning prop values in parallel
-            list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(the_symbol.to_s) }
-              list_of_matching_arrays.each do |change_hash_value|
-                change_hash_value[the_symbol] = @comp_sign
-              end
-            puts @comp_name + " made the move: #{the_symbol}"
-            display_game_board
+    index_array = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
+      if index_array.empty? != true
+        index_array.each do |element|
+            if @winning_propositions[element].has_value?(nil)
+              nil_valued = @winning_propositions[element].select { |key, value| value == nil }
+              @possible_places[nil_valued.keys.first] = @comp_sign
+        #changes the winning prop values in parallel
+              list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(nil_valued.keys.first.to_s) }
+                list_of_matching_arrays.each do |change_hash_value|
+                  change_hash_value[nil_valued.keys.first] = @comp_sign
+                end
+      puts @comp_name + " made the move: #{nil_valued.keys.first}"
+      display_game_board
+      comp_win
 puts "I am building off of a strategy, two of mine were present."
-#__________________________________________________________________________
-          else
-            comp_turn
-puts "There were two of the opponents but didn't meet the condition of nil value."
-          end
-        else
-          comp_turn
-puts "Did not meet the condition of two of the opponents."
+            else
+              comp_turn
+puts "There were two of MINE present but didn't meet the condition of nil value."
+            end
         end
-    end
+      else
+        comp_turn
+      end
+   end
 
   def comp_turn
-
-    #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
-    @user_sign == "X" ? @comp_sign = "O" : "X"
+#    only_user_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
+#     count_of_each = only_user_valued.map { |count_the_items_in_hash| count_the_items_in_hash.count }
+#     index_array = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
+#       if index_array.empty? != true
+#         index_array.each do |element|
+#             if @winning_propositions[element].has_value?(nil)
+#               nil_valued = @winning_propositions[element].select { |key, value| value == nil }
+#               @possible_places[nil_valued.keys.first] = @comp_sign
+#         #changes the winning prop values in parallel
+#               list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(nil_valued.keys.first.to_s) }
+#                 list_of_matching_arrays.each do |change_hash_value|
+#                   change_hash_value[nil_valued.keys.first] = @comp_sign
+#                 end
+#       puts @comp_name + " made the move: #{nil_valued.keys.first}"
+#       display_game_board
+# puts "Here I am defending/BLOCKED!"
+#             else
+#               random_move
+# puts "There were two of PLAYER'S present but didn't meet the condition of nil value."
+#             end
+#         end
+#       else
+#         random_move
+#       end
+#    end
 #__________________________________________________________________________
     #comp find a spot with two of its spots already
     only_user_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
@@ -215,7 +226,7 @@ puts "Did not meet the condition of two of the opponents."
             the_symbol = nil_valued.first.first
             @possible_places[the_symbol] = @comp_sign
 
-            #changes the winning prop values in parallel
+            # changes the winning prop values in parallel
             list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(the_symbol.to_s) }
               list_of_matching_arrays.each do |change_hash_value|
                 change_hash_value[the_symbol] = @comp_sign
@@ -224,19 +235,16 @@ puts "Did not meet the condition of two of the opponents."
             puts @comp_name + " made the move: #{the_symbol}"
             display_game_board
 puts "Here I am defending/BLOCKED!"
-print @possible_places
-
-#__________________________________________________________________________
           else
             random_move
-puts "Two of mine were present but opponent was in the third spot."
+puts "Two of player's were present but I was in the third spot."
           end
         else
           random_move
-puts "I didn't have two and any winning strategy to build off of."
+puts "The PLAYER didn't have two and any winning strategy to build off of."
         end
   end
-
+#__________________________________________________________________________
 
   def comp_win
     #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
@@ -245,6 +253,13 @@ puts "I didn't have two and any winning strategy to build off of."
     a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign } }
     b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
     b.each { |number_count| puts 'I, Watson, have won.  Better luck next time. :)' if number_count == 3 }
+    b.each { |number_count| exit if number_count == 3 }
+  end
+
+  def player_win
+    a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
+    b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
+    b.each { |number_count| puts 'Player won.  That is not possible.  FIX' if number_count == 3 }
     b.each { |number_count| exit if number_count == 3 }
   end
 
