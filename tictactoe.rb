@@ -22,7 +22,7 @@ n.winning_propositions
 
 while n.comp_win != true do #|| n.player_win == true || n.draw_game == true do
   n.user_turn
-  n.player_first_move_or_second_move
+  n.player_first_move
 end
 
 
