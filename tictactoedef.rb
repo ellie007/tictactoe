@@ -6,24 +6,16 @@ class TicTacToe
     @comp_name = "Watson"
   end
 
-  def user_name1
+  def user_name
     @user_name = gets.chomp
   end
 
-  def user_name2
-    @user_name = @user_name
-  end
-
   def user_sign
-    if gets.chomp.upcase == "O"
-      @user_sign = "O"
-    else
-      @user_sign = "X"
-    end
+    @user_sign = "X"
   end
 
   def comp_sign
-    @user_sign == "X" ? @comp_sign = "O" : "X"
+    @comp_sign = "O"
   end
 
   def game_board
@@ -66,7 +58,7 @@ class TicTacToe
             user_turn
           else
             @possible_places[input] = @user_sign
-            puts @user_name + " made the move: #{input}"
+            puts "#{@user_name} made the move: #{input}"
             display_game_board
 
       list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
@@ -234,9 +226,6 @@ class TicTacToe
   end
 
   def comp_win
-    #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
-    @user_sign == "X" ? @comp_sign = "O" : "X"
-
     a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign } }
     b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
     b.each { |number_count| puts 'I, Watson, have won.  Better luck next time. :)' if number_count == 3 }
