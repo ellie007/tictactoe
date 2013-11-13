@@ -75,7 +75,6 @@ class TicTacToe
         list_of_matching_arrays.each do |change_hash_value|
           change_hash_value[input] = @user_sign
         end
-print @winning_propositions
           end
         else
           puts "Please respond in the format of e.g.; a1, c2, etc."
@@ -101,12 +100,12 @@ print @winning_propositions
 
           puts @comp_name + " made the move: #{move}"
           display_game_board
-puts "I picked a corner"
+#puts "I picked a corner"
         else
           @possible_places[:b2] = @comp_sign
           puts @comp_name + " made the move: #{:b2}"
           display_game_board
-puts "I picked the center"
+#puts "I picked the center"
 
           #changes the winning prop values in parallel
           list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(:b2.to_s) }
@@ -124,10 +123,10 @@ puts "I picked the center"
     first_turn_check = @possible_places.select { |key, value| value == @user_sign }
     if first_turn_check.length == 2
       fork_detection
-puts "I am preceding to do the fork detection method."
+#puts "I am preceding to do the fork detection method."
     else
         comp_find
-puts "There is more than 2, precede to comp find."
+#puts "There is more than 2, precede to comp find."
     end
   end
 
@@ -141,7 +140,7 @@ puts "There is more than 2, precede to comp find."
         @possible_places[side_middle] = @comp_sign
         puts @comp_name + " made the move: #{side_middle}"
         display_game_board
-puts "Fork Detected-Kitty Style!"
+#puts "Fork Detected-Kitty Style!"
 
         #changes the winning prop values in parallel
         list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(side_middle.to_s) }
@@ -168,7 +167,7 @@ puts "Fork Detected-Kitty Style!"
         change_hash_value[move] = @comp_sign
       end
     display_game_board
-puts "I picked a random spot by way of the random move method"
+#puts "I picked a random spot by way of the random move method"
     end
 
 
@@ -176,29 +175,35 @@ puts "I picked a random spot by way of the random move method"
     only_comp_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign } }
     count_of_each = only_comp_valued.map { |count_the_items_in_hash| count_the_items_in_hash.count }
     index_array = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
-      if index_array.empty? != true
-        index_array.each do |element|
-          if @winning_propositions[element].has_value?(nil) == true
-            nil_valued = @winning_propositions[element].select { |key, value| value == nil }
-            @possible_places[nil_valued.keys.first] = @comp_sign
-        #changes the winning prop values in parallel
-              list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(nil_valued.keys.first.to_s) }
-                list_of_matching_arrays.each do |change_hash_value|
-                  change_hash_value[nil_valued.keys.first] = @comp_sign
-                end
-      puts @comp_name + " made the move: #{nil_valued.keys.first}"
-      display_game_board
-      comp_win
-puts "I am building off of a strategy, two of mine were present."
-            else
-              comp_block
-#puts "There were two of MINE present but didn't meet the condition of nil value."
-            end
-        end
-      else
+      if index_array.empty? == true
         comp_block
+      else
+        @nil_valued_values_array = []
+        @nil_valued_array_true_false = []
+          index_array.each do |element|
+            @nil_valued_values_array += [@winning_propositions[element].select { |key, value| value == nil }]
+            @nil_valued_array_true_false += [@winning_propositions[element].select { |key, value| value == nil }.empty?]
+          end
+
+    if @nil_valued_values_array.include?({})
+      @nil_valued_values_array.delete({})
+    end
+    move = @nil_valued_values_array[0].keys[0] unless @nil_valued_values_array[0] == nil
+
+        if @nil_valued_array_true_false == [false] || @nil_valued_array_true_false == [true, false] || @nil_valued_array_true_false == [false, true]
+          @possible_places[move] = @comp_sign
+            #changes the winning prop values in parallel
+              list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(move.to_s) }
+                list_of_matching_arrays.each do |change_hash_value|
+                  change_hash_value[move] = @comp_sign
+                end
+          puts @comp_name + " made the move: #{move}"
+          display_game_board
+        else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
+         comp_block
+        end
       end
-   end
+    end
 
 
   def comp_block
@@ -208,24 +213,29 @@ puts "I am building off of a strategy, two of mine were present."
       if index_array.empty? == true
         random_move
       else
-        @new_array = []
-        index_array.each do |element|
-          @nil_valued = @winning_propositions[element].select { |key, value| value == nil }
-            if @nil_valued.empty? == false
-              @new_array += [@winning_propositions[element].select { |key, value| value == nil }]
-            end
-        end
-        if @new_array.empty? == false
-          @possible_places[@new_array.first.keys.first] = @comp_sign
+        @nil_valued_values_array = []
+        @nil_valued_array_true_false = []
+          index_array.each do |element|
+            @nil_valued_values_array += [@winning_propositions[element].select { |key, value| value == nil }]
+            @nil_valued_array_true_false += [@winning_propositions[element].select { |key, value| value == nil }.empty?]
+          end
+
+    if @nil_valued_values_array.include?({})
+      @nil_valued_values_array.delete({})
+    end
+    move = @nil_valued_values_array[0].keys[0] unless @nil_valued_values_array[0] == nil
+
+        if @nil_valued_array_true_false == [false] || @nil_valued_array_true_false == [true, false] || @nil_valued_array_true_false == [false, true]
+          @possible_places[move] = @comp_sign
             #changes the winning prop values in parallel
-              list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(@new_array.first.keys.first.to_s) }
+              list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(move.to_s) }
                 list_of_matching_arrays.each do |change_hash_value|
-                  change_hash_value[@new_array.first.keys.first] = @comp_sign
+                  change_hash_value[move] = @comp_sign
                 end
-          puts @comp_name + " made the move: #{@new_array.first.keys.first}"
+          puts @comp_name + " made the move: #{move}"
           display_game_board
           puts "Here I am defending/BLOCKED!!!!!!"
-        else
+        else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
          random_move
         end
       end
