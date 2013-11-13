@@ -42,7 +42,6 @@ class TicTacToe
     puts "  #{@possible_places[:c1]} | #{@possible_places[:c2]}  | #{@possible_places[:c3]}"
   end
 
-
   def winning_propositions
     @winning_propositions = [
     {a1:@a1, a2:@a2, a3:@a3},
@@ -57,7 +56,6 @@ class TicTacToe
     {a3:@a3, b2:@b2, c1:@c3}
     ]
   end
-
 
   def user_turn
     input = gets.chomp.downcase.to_sym
@@ -81,7 +79,6 @@ class TicTacToe
           user_turn
       end
   end
-
 
   def player_first_move
     first_turn_check = @possible_places.select { |key, value| value == @user_sign }
@@ -118,7 +115,6 @@ class TicTacToe
       end
   end
 
-
   def second_turn_check
     first_turn_check = @possible_places.select { |key, value| value == @user_sign }
     if first_turn_check.length == 2
@@ -129,7 +125,6 @@ class TicTacToe
 #puts "There is more than 2, precede to comp find."
     end
   end
-
 
   def fork_detection
     second_turn_check = @possible_places.select { |key, value| value == @user_sign }
@@ -152,9 +147,7 @@ class TicTacToe
       end
   end
 
-
   def random_move
-draw_game
     hash_to_array = @possible_places.to_a
     only_nil_valued_hash = hash_to_array.select { |key, value| value == nil }
     random_array_hash_value = only_nil_valued_hash.sample
@@ -169,9 +162,7 @@ draw_game
       end
     display_game_board
 #puts "I picked a random spot by way of the random move method"
-
     end
-
 
   def comp_find
     only_comp_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign } }
@@ -207,7 +198,6 @@ draw_game
       end
     end
 
-
   def comp_block
     only_user_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
     count_of_each = only_user_valued.map { |count_the_items_in_hash| count_the_items_in_hash.count }
@@ -242,7 +232,6 @@ draw_game
         end
       end
   end
-
 
   def comp_win
     #fix this, why not reading from prior def correctly?!!!!!!!!!!!!
