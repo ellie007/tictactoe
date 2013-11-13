@@ -49,13 +49,13 @@ class TicTacToe
     {b1:@b1, b2:@b2, b3:@b3},
     {c1:@c1, c2:@c2, c3:@c3},
 
-      {a1:@a1, b1:@b1, c1:@c1},
-      {a2:@a1, b2:@b2, c2:@c2},
-      {a3:@a3, b3:@b3, c3:@c3},
+    {a1:@a1, b1:@b1, c1:@c1},
+    {a2:@a1, b2:@b2, c2:@c2},
+    {a3:@a3, b3:@b3, c3:@c3},
 
-      {a1:@a1, b2:@b2, c3:@c3},
-      {a3:@a3, b2:@b2, c1:@c3}
-      ]
+    {a1:@a1, b2:@b2, c3:@c3},
+    {a3:@a3, b2:@b2, c1:@c3}
+    ]
   end
 
 
@@ -154,6 +154,7 @@ class TicTacToe
 
 
   def random_move
+draw_game
     hash_to_array = @possible_places.to_a
     only_nil_valued_hash = hash_to_array.select { |key, value| value == nil }
     random_array_hash_value = only_nil_valued_hash.sample
@@ -168,6 +169,7 @@ class TicTacToe
       end
     display_game_board
 #puts "I picked a random spot by way of the random move method"
+
     end
 
 
@@ -234,7 +236,7 @@ class TicTacToe
                 end
           puts @comp_name + " made the move: #{move}"
           display_game_board
-          puts "Here I am defending/BLOCKED!!!!!!"
+#puts "Here I am defending/BLOCKED!!!!!!"
         else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
          random_move
         end
@@ -252,18 +254,16 @@ class TicTacToe
     b.each { |number_count| exit if number_count == 3 }
   end
 
-  def player_win
-    a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
-    b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
-    b.each { |number_count| puts 'Player won.  That is not possible.  FIX' if number_count == 3 }
-    b.each { |number_count| exit if number_count == 3 }
-  end
+  # def player_win
+  #   a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
+  #   b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
+  #   b.each { |number_count| puts 'Player won.  That is not possible.  FIX' if number_count == 3 }
+  #   b.each { |number_count| exit if number_count == 3 }
+  # end
 
   def draw_game
-    if @possible_places.length == 9
-      puts "Draw game.  You are formidable competition; good job!"
-      exit
-    end
+    puts "Draw game.  You are formidable competition; good job!" if @possible_places.values.include?(nil) == false
+    exit if @possible_places.values.include?(nil) == false
   end
 
 end
