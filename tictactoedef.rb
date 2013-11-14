@@ -70,7 +70,6 @@ class TicTacToe
           puts "Please respond in the format of e.g.; a1, c2, etc."
           user_turn
       end
-print @winning_propositions
   end
 
   def player_first_move
@@ -90,12 +89,12 @@ print @winning_propositions
 
           puts @comp_name + " made the move: #{move}"
           display_game_board
-puts "I picked a corner"
+#puts "I picked a corner"
         else
           @possible_places[:b2] = @comp_sign
           puts @comp_name + " made the move: #{:b2}"
           display_game_board
-puts "I picked the center"
+#puts "I picked the center"
 
           #changes the winning prop values in parallel
           list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(:b2.to_s) }
@@ -112,10 +111,10 @@ puts "I picked the center"
     first_turn_check = @possible_places.select { |key, value| value == @user_sign }
     if first_turn_check.length == 2
       fork_detection
-puts "I am preceding to do the fork detection method."
+#puts "I am preceding to do the fork detection method."
     else
         comp_find
-puts "There is more than 2, precede to comp find."
+#puts "There is more than 2, precede to comp find."
     end
   end
 
@@ -154,8 +153,7 @@ puts "There is more than 2, precede to comp find."
         change_hash_value[move] = @comp_sign
       end
     display_game_board
-puts "I picked a random spot by way of the random move method"
-puts "You are my arch nememsis-forever not my friend"
+#puts "I picked a random spot by way of the random move method"
     end
 
   def comp_find
@@ -194,11 +192,8 @@ puts "You are my arch nememsis-forever not my friend"
 
   def comp_block
     only_user_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
-print only_user_valued
     count_of_each = only_user_valued.map { |count_the_items_in_hash| count_the_items_in_hash.count }
-print count_of_each
     index_array = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
-print count_of_each
       if index_array.empty? == true
         random_move
       else
@@ -208,10 +203,6 @@ print count_of_each
             @nil_valued_values_array += [@winning_propositions[element].select { |key, value| value == nil }]
             @nil_valued_array_true_false += [@winning_propositions[element].select { |key, value| value == nil }.empty?]
           end
-
-print @nil_valued_values_array
-print @nil_valued_array_true_false
-
 
     if @nil_valued_values_array.include?({})
       @nil_valued_values_array.delete({})
@@ -227,7 +218,7 @@ print @nil_valued_array_true_false
                 end
           puts @comp_name + " made the move: #{move}"
           display_game_board
-puts "Here I am defending/BLOCKED!!!!!!"
+#puts "Here I am defending/BLOCKED!!!!!!"
         else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
          random_move
         end
