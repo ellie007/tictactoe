@@ -1,77 +1,5 @@
 class TicTacToe
 
-  attr_accessor :a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3
-
-  def comp_name
-    @comp_name = "Watson"
-  end
-
-  def user_name
-    @user_name = gets.chomp
-  end
-
-  def user_sign
-    @user_sign = "X"
-  end
-
-  def comp_sign
-    @comp_sign = "O"
-  end
-
-  def game_board
-    @possible_places = {
-    a1: @a1,a2: @a2,a3: @a3,
-    b1: @b1,b2: @b2,b3: @b3,
-    c1: @c1,c2: @c2,c3: @c3
-   }
-  end
-
-  def display_game_board
-    puts "  #{@possible_places[:a1]} | #{@possible_places[:a2]}  | #{@possible_places[:a3]}"
-    puts "--- --- ---"
-    puts "  #{@possible_places[:b1]} | #{@possible_places[:b2]}  | #{@possible_places[:b3]}"
-    puts "--- --- ---"
-    puts "  #{@possible_places[:c1]} | #{@possible_places[:c2]}  | #{@possible_places[:c3]}"
-  end
-
-  def winning_propositions
-    @winning_propositions = [
-    {a1:@a1, a2:@a2, a3:@a3},
-    {b1:@b1, b2:@b2, b3:@b3},
-    {c1:@c1, c2:@c2, c3:@c3},
-
-    {a1:@a1, b1:@b1, c1:@c1},
-    {a2:@a1, b2:@b2, c2:@c2},
-    {a3:@a3, b3:@b3, c3:@c3},
-
-    {a1:@a1, b2:@b2, c3:@c3},
-    {a3:@a3, b2:@b2, c1:@c3}
-    ]
-  end
-
-  def user_turn
-    input = gets.chomp.downcase.to_sym
-      case input
-        when 'a1'.to_sym, 'a2'.to_sym, 'a3'.to_sym, 'b1'.to_sym, 'b2'.to_sym, 'b3'.to_sym, 'c1'.to_sym, 'c2'.to_sym, 'c3'.to_sym
-          if @possible_places[input] != nil
-            puts "Spot is occupied, please choose an empty space."
-            user_turn
-          else
-            @possible_places[input] = @user_sign
-            puts "#{@user_name} made the move: #{input}"
-            display_game_board
-
-      list_of_matching_arrays=@winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
-        list_of_matching_arrays.each do |change_hash_value|
-          change_hash_value[input] = @user_sign
-        end
-          end
-        else
-          puts "Please respond in the format of e.g.; a1, c2, etc."
-          user_turn
-      end
-  end
-
   def player_first_move
     first_turn_check = @possible_places.select { |key, value| value == @user_sign }
       if first_turn_check.length == 1
@@ -223,25 +151,6 @@ class TicTacToe
          random_move
         end
       end
-  end
-
-  def comp_win
-    a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @comp_sign } }
-    b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
-    b.each { |number_count| puts 'I, Watson, have won.  Better luck next time. :)' if number_count == 3 }
-    b.each { |number_count| exit if number_count == 3 }
-  end
-
-  # def player_win
-  #   a = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
-  #   b = a.map { |count_the_items_in_hash| count_the_items_in_hash.count }
-  #   b.each { |number_count| puts 'Player won.  That is not possible.  FIX' if number_count == 3 }
-  #   b.each { |number_count| exit if number_count == 3 }
-  # end
-
-  def draw_game
-    puts "Draw game.  You are formidable competition; good job!" if @possible_places.values.include?(nil) == false
-    exit if @possible_places.values.include?(nil) == false
   end
 
 end

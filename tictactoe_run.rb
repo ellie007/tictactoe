@@ -1,4 +1,6 @@
-load 'tictactoedef.rb'
+load 'admin_logic.rb'
+load 'comp_logic.rb'
+load 'user_logic.rb'
 
 n = TicTacToe.new
 
