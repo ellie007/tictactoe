@@ -4,7 +4,7 @@ load 'user_logic.rb'
 
 n = TicTacToe.new
 
-puts "Hello, I\'m " + n.comp_name + ", let\'s play Tic Tac Toe!  What is your name?"
+puts "Hello, I\'m " + n.computer_name + ", let\'s play Tic Tac Toe!  What is your name?"
 
 puts "Great " + n.user_name + ", you\'ll be " + n.user_sign + ".  Please choose where you want to go."
 
@@ -16,14 +16,14 @@ puts " --- --- ---"
 puts ' c1 | c2 | c3'
 
 n.user_sign
-n.comp_sign
+n.computer_sign
 n.game_board
 n.winning_propositions
 
-while n.comp_win != true do
+while n.computer_win != true do
   n.user_turn
-  n.draw_game
-  n.player_first_move
-  n.draw_game
+  n.draw_game_outcome
+  n.player_first_turn_check?
+  n.draw_game_outcome
 end
 
