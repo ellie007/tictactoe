@@ -1,7 +1,7 @@
-class TicTacToe
+class ComputerLogic < Admin
 
   def player_first_turn_check?
-    @first_turn_check = @possible_places.select { |key, value| value == @user_sign }
+    @first_turn_check = $possible_places.select { |key, value| value == @user_sign }
     if @first_turn_check.length == 1
       player_first_move
     else
@@ -24,7 +24,7 @@ class TicTacToe
 
 
   def player_second_turn_check?
-    first_turn_check = @possible_places.select { |key, value| value == @user_sign }
+    first_turn_check = $possible_places.select { |key, value| value == @user_sign }
     if first_turn_check.length == 2
       fork_detection_type_1
     else
@@ -88,7 +88,7 @@ class TicTacToe
 
 
   def attack_count_and_index
-    only_computer_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @computer_sign } }
+    only_computer_valued = $winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @computer_sign } }
     count_of_each = only_computer_valued.map { |count_values_in_hash| count_values_in_hash.count }
     @indexed_spot = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
   end
@@ -129,7 +129,7 @@ class TicTacToe
 
 
   def counter_attack_count_and_index
-    only_user_valued = @winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
+    only_user_valued = $winning_propositions.map { |each_hash| each_hash.select { |key, value| value == @user_sign } }
     count_of_each = only_user_valued.map { |count_values_in_hash| count_values_in_hash.count }
     @indexed_spot = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
   end
@@ -146,7 +146,7 @@ class TicTacToe
 
 
   def random_move
-    move = @possible_places.to_a.select { |key, value| value == nil }.sample.first
+    move = $possible_places.to_a.select { |key, value| value == nil }.sample.first
     declare_computer_move(move)
   end
 

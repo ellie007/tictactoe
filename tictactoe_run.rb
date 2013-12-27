@@ -1,12 +1,23 @@
 load 'admin_logic.rb'
-load 'comp_logic.rb'
+load 'computer_logic.rb'
 load 'user_logic.rb'
 
-n = TicTacToe.new
 
-puts "Hello, I\'m " + n.computer_name + ", let\'s play Tic Tac Toe!  What is your name?"
+class TicTacToe < Admin
+  attr_reader :admin_object, :computer_object, :user_object
 
-puts "Great " + n.user_name + ", you\'ll be " + n.user_sign + ".  Please choose where you want to go."
+  def initialize
+    @admin_object = Admin.new
+    @computer_object = ComputerLogic.new
+    @user_object = UserLogic.new
+  end
+end
+
+new_game = TicTacToe.new
+
+puts "Hello, I\'m " + new_game.admin_object.computer_name + ", let\'s play Tic Tac Toe!  What is your name?"
+
+puts "Great " + new_game.admin_object.user_name + ", you\'ll be " + new_game.admin_object.user_sign + ".  Please choose where you want to go."
 
 puts 'The game board is the following, please remember!'
 puts ' a1 | a2 | a3'
@@ -15,15 +26,16 @@ puts ' b1 | b2 | b3'
 puts " --- --- ---"
 puts ' c1 | c2 | c3'
 
-n.user_sign
-n.computer_sign
-n.game_board
-n.winning_propositions
+new_game.admin_object.user_sign
+new_game.admin_object.computer_sign
+new_game.admin_object.game_board
+new_game.admin_object.winning_propositions
 
-while n.computer_win != true do
-  n.user_turn
-  n.draw_game_outcome
-  n.player_first_turn_check?
-  n.draw_game_outcome
+while new_game.admin_object.computer_win != true do
+  new_game.user_object.user_turn
+  new_game.admin_object.draw_game_outcome
+  new_game.computer_object.player_first_turn_check?
+  new_game.admin_object.draw_game_outcome
 end
+
 

@@ -1,4 +1,6 @@
-class TicTacToe
+require "./admin_logic"
+
+class UserLogic < Admin
 
   def user_turn
     input = gets.chomp.downcase.to_sym
@@ -11,7 +13,7 @@ class TicTacToe
   end
 
   def spot_is_occupied(input)
-    if @possible_places[input] != nil
+    if $possible_places[input] != nil
       puts "Spot is occupied, please choose an empty space."
       user_turn
     else
@@ -25,14 +27,14 @@ class TicTacToe
   end
 
   def declare_user_input(input)
-    @possible_places[input] = @user_sign
+    $possible_places[input] = @user_sign
     puts "#{@user_name} made the move: #{input}"
     display_game_board
     update_user_game_board(input)
   end
 
   def update_user_game_board(input)
-    list_of_matching_arrays = @winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
+    list_of_matching_arrays = $winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
     list_of_matching_arrays.each do |change_hash_value|
       change_hash_value[input] = @user_sign
     end
