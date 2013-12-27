@@ -27,8 +27,8 @@ class UserLogic < Admin
   end
 
   def declare_user_input(input)
-    $possible_places[input] = @user_sign
-    puts "#{@user_name} made the move: #{input}"
+    $possible_places[input] = $user_sign
+    puts "#{$user_name} made the move: #{input}"
     display_game_board
     update_user_game_board(input)
   end
@@ -36,7 +36,7 @@ class UserLogic < Admin
   def update_user_game_board(input)
     list_of_matching_arrays = $winning_propositions.select { |key, value| key.to_s.match(input.to_s) }
     list_of_matching_arrays.each do |change_hash_value|
-      change_hash_value[input] = @user_sign
+      change_hash_value[input] = $user_sign
     end
   end
 
