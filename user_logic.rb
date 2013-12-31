@@ -1,5 +1,3 @@
-require "./admin_logic"
-
 class UserLogic < Admin
 
   def user_turn

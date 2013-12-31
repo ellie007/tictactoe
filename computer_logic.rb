@@ -1,48 +1,58 @@
 class ComputerLogic < Admin
 
-  def player_first_turn_check?
-    @first_turn_check = $possible_places.select { |key, value| value == $user_sign }
-    if @first_turn_check.length == 1
-      player_first_move
-    else
-      player_second_turn_check?
-    end
+  def player_first_turn?(possible_places, user_sign)
+    @first_turn = possible_places.select { |key, value| value == user_sign }
   end
 
 
-  def player_first_move
-    check_center = @first_turn_check.keys.first
+  def player_first_turn_delegation(first_turn)
+    length_check = first_turn.length
+    #if length_check == 1
+    #  player_first_move
+    #else
+    #  player_second_turn_check?
+    #end
+  end
+
+
+  def player_first_move(first_turn)
+    check_center = first_turn.keys.first
     if check_center == :b2
       narrowed_possibilities = { a1: @a1,a3: @a3, c1: @c1,c3: @c3 }
       move = narrowed_possibilities.keys.sample
-      declare_computer_move(move)
+      #declare_computer_move(move)
     else
       move = :b2
-      declare_computer_move(move)
+      #declare_computer_move(move)
     end
   end
 
 
-  def player_second_turn_check?
-    first_turn_check = $possible_places.select { |key, value| value == $user_sign }
-    if first_turn_check.length == 2
-      fork_detection_type_1
-    else
-      attack
-    end
+  def player_second_turn?(possible_places, user_sign)
+    @second_turn = possible_places.select { |key, value| value == user_sign }
+  end
+
+
+  def player_second_turn_delegation(second_turn)
+    length_check = second_turn.length
+    #if length_check == 2
+    #  fork_detection_type_1
+    #else
+    #  attack
+    #end
   end
 
 
   #if the user is trying to do a fork from two corners
-  def fork_detection_type_1
-    second_turn_check = $possible_places.select { |key, value| value == $user_sign }
+  def fork_detection_type_1(possible_places, user_sign)
+    second_turn_check = possible_places.select { |key, value| value == user_sign }
     @corners = { a1:@a1, a3:@a3, c1:@c1, c3:@c3 }
     kitty_fork_check = second_turn_check.keys & @corners.keys
     if kitty_fork_check == [:a1, :c3] || kitty_fork_check == [:a3, :c1]
       move = { a2:@a2, b3:@b3, c2:@c2, b1:@b1 }.keys.sample
-      declare_computer_move(move)
+      #declare_computer_move(move)
     else
-      fork_detection_type_2
+      #fork_detection_type_2
     end
   end
 
@@ -51,12 +61,10 @@ class ComputerLogic < Admin
   def fork_detection_type_2
     var = $possible_places.select { |key, value| value == $user_sign }
     if var.keys == [:a1,:b2] || var.keys == [:a3,:b2] || var.keys == [:b2, c1] || var.keys == [:b2,:c3]
-      only_corners = $possible_places.select { |key, value| key == :a1 || key == :a3 || key == :c1 || key == :c3 }
-      nil_valued_corner = only_corners.select { |key, value| value == nil }
-      move = only_corners.select { |key, value| value == nil }.keys.sample
-      declare_computer_move(move)
+      move = $possible_places.select { |key, value| key == :a1 || key == :a3 || key == :c1 || key == :c3 }.keys.sample
+      #declare_computer_move(move)
     else
-      fork_detection_type_3
+      #fork_detection_type_3
     end
   end
 
