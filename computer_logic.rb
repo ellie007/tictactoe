@@ -4,30 +4,25 @@ class ComputerLogic < Admin
     if player_first_turn?
     elsif attack
     elsif counter_attack
-    elsif forks_detection_test
-    elsif random_move
+    elsif fork_play?
+    else random_move
+    end
   end
 
-  def player_first_turn?(possible_places, user_sign)
-    @first_turn = possible_places.select { |key, value| value == user_sign }
-  end
-
-
-  def player_first_turn_delegation(first_turn)
-    length_check = first_turn.length
-    if length_check == 1
-      player_first_move
+  def player_first_turn?#(possible_places, user_sign)
+    @first_turn = $possible_places.select { |key, value| value == $user_sign }
+    if @first_turn.length == 1
+      computer_first_move
     else
-      attack
+      return false
     end
   end
 
 
-  def player_first_move(first_turn)
-    check_center = first_turn.keys.first
-    if check_center == :b2
-      narrowed_possibilities = { a1: @a1,a3: @a3, c1: @c1,c3: @c3 }
-      move = narrowed_possibilities.keys.sample
+  def computer_first_move#(first_turn)
+    player_took_center = @first_turn.keys.first
+    if player_took_center == :b2
+      move = { a1: @a1,a3: @a3, c1: @c1,c3: @c3 }.keys.sample
       declare_computer_move(move)
     else
       move = :b2
@@ -36,58 +31,54 @@ class ComputerLogic < Admin
   end
 
 
-  def player_second_turn?(possible_places, user_sign)
-    @second_turn = possible_places.select { |key, value| value == user_sign }
-  end
-
-
-  def player_second_turn_delegation(second_turn)
-    length_check = second_turn.length
-    if length_check == 2
-      fork_detection_type_1
+  def fork_play?#(possible_places, user_sign)
+    @second_turn = $possible_places.select { |key, value| value == $user_sign }
+    if @second_turn.length == 2
+      run_fork_detection_tests
     else
-      attack
+      return false
     end
   end
 
+  def run_fork_detection_tests
+    if fork_detection_type_1
+    elsif fork_detection_type_2
+    else fork_detection_type_3
+    end
+  end
 
-  #if the user is trying to do a fork from two corners
-  def fork_detection_type_1(possible_places, user_sign)
-    second_turn_check = possible_places.select { |key, value| value == user_sign }
-    @corners = { a1:@a1, a3:@a3, c1:@c1, c3:@c3 }
-    kitty_fork_check = second_turn_check.keys & @corners.keys
-    if kitty_fork_check == [:a1, :c3] || kitty_fork_check == [:a3, :c1]
+  #if the user is trying to do a fork from two corners, need to go in edge
+  def fork_detection_type_1#(possible_places, user_sign)
+    if @second_turn.keys == [:a1, :c3] || @second_turn.keys == [:a3, :c1]
       move = { a2:@a2, b3:@b3, c2:@c2, b1:@b1 }.keys.sample
       declare_computer_move(move)
     else
-      fork_detection_type_2
+      return false
     end
   end
 
 
-  #if the user is trying to do a fork from a center and a corner
-  def fork_detection_type_2(possible_places, user_sign)
-    var = possible_places.select { |key, value| value == user_sign }
-    if var.keys == [:a1,:b2] || var.keys == [:a3,:b2] || var.keys == [:b2, :c1] || var.keys == [:b2,:c3]
-      move = possible_places.select { |key, value| key == :a1 || key == :a3 || key == :c1 || key == :c3 }.keys.sample
+  #if the user is trying to do a fork from a center and a corner, need to go in corner
+  def fork_detection_type_2#(possible_places, user_sign)
+    if @second_turn.keys == [:a1,:b2] || @second_turn.keys == [:a3,:b2] || @second_turn.keys == [:b2, :c1] || @second_turn.keys == [:b2,:c3]
+      move = $possible_places.select { |key, value| key == :a1 || key == :a3 || key == :c1 || key == :c3 && value == nil }.keys.sample
       declare_computer_move(move)
     else
-      fork_detection_type_3
+      return false
     end
   end
 
 
-  #if a user is trying to do a fork from an edge and a corner
-  def fork_detection_type_3(possible_places, user_sign)
-    var = possible_places.select { |key, value| value == user_sign }
-    if var.keys == [:a1,:c2] || var.keys == [:a3,:c2]
+  #if a user is trying to do a fork from an edge and a corner, need to go in adjacent corners
+  def fork_detection_type_3#(possible_places, user_sign)
+    if @second_turn.keys == [:a1,:c2] || @second_turn.keys == [:a3,:c2]
       move = [:c1,:c3].sample
       declare_computer_move(move)
-    elsif var.keys == [:a2,:c1] || var.keys == [:a2,:c3]
+    elsif @second_turn.keys == [:a2,:c1] || @second_turn.keys == [:a2,:c3]
       move = [:a1,:a3].sample
       declare_computer_move(move)
     else
-      attack
+      return false
     end
   end
 
@@ -95,7 +86,7 @@ class ComputerLogic < Admin
   def attack
     attack_count_and_index
     if @indexed_spot.empty? == true
-      counter_attack
+      return false
     else
       attack_find_spot_and_clean_up
       attack_set_value
@@ -103,19 +94,19 @@ class ComputerLogic < Admin
   end
 
 
-  def attack_count_and_index(winning_propositions, computer_sign)
-    only_computer_valued = winning_propositions.map { |each_hash| each_hash.select { |key, value| value == computer_sign } }
+  def attack_count_and_index#(winning_propositions, computer_sign)
+    only_computer_valued = $winning_propositions.map { |each_hash| each_hash.select { |key, value| value == computer_sign } }
     count_of_each = only_computer_valued.map { |count_values_in_hash| count_values_in_hash.count }
     @indexed_spot = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
   end
 
 
-  def attack_find_spot_and_clean_up(winning_propositions)
+  def attack_find_spot_and_clean_up#(winning_propositions)
     @nil_valued_values_array = []
     @nil_valued_array_true_false = []
     @indexed_spot.each do |element|
-      @nil_valued_values_array += [winning_propositions[element].select { |key, value| value == nil }]
-      @nil_valued_array_true_false += [winning_propositions[element].select { |key, value| value == nil }.empty?]
+      @nil_valued_values_array += [$winning_propositions[element].select { |key, value| value == nil }]
+      @nil_valued_array_true_false += [$winning_propositions[element].select { |key, value| value == nil }.empty?]
     end
     if @nil_valued_values_array.include?({})
       @nil_valued_values_array.delete({})
@@ -127,8 +118,8 @@ class ComputerLogic < Admin
     if @nil_valued_array_true_false.include?(false)
       move = @nil_valued_values_array[0].keys[0] unless @nil_valued_values_array[0] == nil
       declare_computer_move(move)
-    else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
-      counter_attack
+    #else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
+      #counter_attack
     end
   end
 
@@ -136,7 +127,7 @@ class ComputerLogic < Admin
   def counter_attack
     counter_attack_count_and_index
     if @indexed_spot.empty? == true
-      random_move
+      return false
     else
       counter_attack_find_spot_and_clean_up
       counter_attack_set_value
@@ -151,12 +142,12 @@ class ComputerLogic < Admin
   end
 
 
-  def counter_attack_find_spot_and_clean_up(winning_propositions)
+  def counter_attack_find_spot_and_clean_up#(winning_propositions)
     @nil_valued_values_array = []
     @nil_valued_array_true_false = []
     @indexed_spot.each do |element|
-      @nil_valued_values_array += [winning_propositions[element].select { |key, value| value == nil }]
-      @nil_valued_array_true_false += [winning_propositions[element].select { |key, value| value == nil }.empty?]
+      @nil_valued_values_array += [$winning_propositions[element].select { |key, value| value == nil }]
+      @nil_valued_array_true_false += [$winning_propositions[element].select { |key, value| value == nil }.empty?]
     end
     if @nil_valued_values_array.include?({})
       @nil_valued_values_array.delete({})
@@ -168,14 +159,14 @@ class ComputerLogic < Admin
     if @nil_valued_array_true_false.include?(false)
       move = @nil_valued_values_array[0].keys[0] unless @nil_valued_values_array[0] == nil
       declare_computer_move(move)
-    else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
-      player_second_turn?
+    #else @nil_valued_array_true_false == [true] || @nil_valued_array_true_false == [true, true]
+      #player_second_turn?
     end
   end
 
 
-  def random_move(possible_places)
-    move = possible_places.to_a.select { |key, value| value == nil }.sample.first
+  def random_move#(possible_places)
+    move = $possible_places.to_a.select { |key, value| value == nil }.sample.first
     declare_computer_move(move)
   end
 

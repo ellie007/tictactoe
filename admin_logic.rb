@@ -54,6 +54,8 @@ class Admin
     puts $computer_name + " made the move: #{move}"
     display_game_board
     update_computer_game_board(move)
+    #return computer_made_move
+    #user_turn
   end
 
   def update_computer_game_board(move)

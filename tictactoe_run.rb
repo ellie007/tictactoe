@@ -34,7 +34,7 @@ new_game.admin_object.winning_propositions
 while new_game.admin_object.computer_win != true do
   new_game.user_object.user_turn
   new_game.admin_object.draw_game_outcome
-  new_game.computer_object.player_first_turn_check?
+  new_game.computer_object.computer_turn
   new_game.admin_object.draw_game_outcome
 end
 

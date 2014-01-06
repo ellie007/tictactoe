@@ -72,7 +72,7 @@ describe "ComputerLogic" do
       @test_case.player_second_turn_delegation(second_turn).should == 2
     end
 
-    it "should not be returning 2 for all cases but one move" do
+    it "should not be returning 2 for all cases but two moves" do
       second_turn = {:a1=>"X"}
 
       @test_case.player_second_turn_delegation(second_turn).should_not == 2
