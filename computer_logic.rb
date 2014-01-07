@@ -2,20 +2,15 @@ class ComputerLogic < Admin
 
   def computer_turn
     if player_first_turn?
-      puts "PLAYER FIRST TURN"
     elsif attack
-      puts "ATTACK"
     elsif counter_attack
-      puts "COUNTER ATTACK"
     elsif fork_play?
-      puts "FORK PLAY"
     else random_move
-      puts "RANDOM MOVE"
     end
   end
 
-  def player_first_turn?#(possible_places, user_sign)
-    @first_turn = $possible_places.select { |key, value| value == $user_sign }
+  def player_first_turn?(possible_places)
+    @first_turn = possible_places.select { |key, value| value == $user_sign }
     if @first_turn.length == 1
       return computer_first_move
     else
@@ -24,20 +19,21 @@ class ComputerLogic < Admin
   end
 
 
-  def computer_first_move#(first_turn)
-    player_took_center = @first_turn.keys.first
-    if player_took_center == :b2
+  def computer_first_move
+    check_center = @first_turn.keys.first
+    if check_center == :b2
       move = { a1: @a1,a3: @a3, c1: @c1,c3: @c3 }.keys.sample
-      return declare_computer_move(move)
+      #return declare_computer_move(move)
     else
       move = :b2
-      return declare_computer_move(move)
+      #return declare_computer_move(move)
     end
   end
 
 
-  def fork_play?#(possible_places, user_sign)
-    @second_turn = $possible_places.select { |key, value| value == $user_sign }
+  def fork_play?(possible_places)
+    @possible_places = possible_places
+    @second_turn = @possible_places.select { |key, value| value == $user_sign }
     if @second_turn.length == 2
       return run_fork_detection_tests
     else
@@ -47,13 +43,10 @@ class ComputerLogic < Admin
 
   def run_fork_detection_tests
     if fork_detection_type_1
-      puts "FORK TYPE 1"
       return true
     elsif fork_detection_type_2
-      puts "FORK TYPE 2"
       return true
     elsif fork_detection_type_3
-      puts "FORK TYPE 3"
       return true
     else
       return false
@@ -61,10 +54,10 @@ class ComputerLogic < Admin
   end
 
   #if the user is trying to do a fork from two corners, need to go in edge
-  def fork_detection_type_1#(possible_places, user_sign)
+  def fork_detection_type_1#(second_turn)
     if @second_turn.keys == [:a1, :c3] || @second_turn.keys == [:a3, :c1]
       move = { a2:@a2, b3:@b3, c2:@c2, b1:@b1 }.keys.sample
-      return declare_computer_move(move)
+      #return declare_computer_move(move)
     else
       return false
     end
@@ -72,11 +65,11 @@ class ComputerLogic < Admin
 
 
   #if the user is trying to do a fork from a center and a corner, need to go in corner
-  def fork_detection_type_2#(possible_places, user_sign)
+  def fork_detection_type_2#(second_turn, possible_places)
     if @second_turn.keys == [:a1,:b2] || @second_turn.keys == [:a3,:b2] || @second_turn.keys == [:b2, :c1] || @second_turn.keys == [:b2,:c3]
-      move = $possible_places.select { |key, value| key == :a1 || key == :a3 || key == :c1 || key == :c3 && value == nil }.keys.sample
-#FIX THE FACT THAT IT IS NOT PICKING A NIL VALUE, OVERWRITTING PLAYER MARKED VALUE
-      return declare_computer_move(move)
+      var = @possible_places.select { |key, value| value ==nil }.keys & [:a1, :a3, :c1, :c3]
+      move = var.sample
+      #return declare_computer_move(move)
     else
       return false
     end
@@ -84,13 +77,13 @@ class ComputerLogic < Admin
 
 
   #if a user is trying to do a fork from an edge and a corner, need to go in adjacent corners
-  def fork_detection_type_3#(possible_places, user_sign)
+  def fork_detection_type_3#(second_turn)
     if @second_turn.keys == [:a1,:c2] || @second_turn.keys == [:a3,:c2]
       move = [:c1,:c3].sample
-      return declare_computer_move(move)
+      #return declare_computer_move(move)
     elsif @second_turn.keys == [:a2,:c1] || @second_turn.keys == [:a2,:c3]
       move = [:a1,:a3].sample
-      return declare_computer_move(move)
+      #return declare_computer_move(move)
     else
       return false
     end
@@ -108,14 +101,14 @@ class ComputerLogic < Admin
   end
 
 
-  def attack_count_and_index#(winning_propositions, computer_sign)
+  def attack_count_and_index(winning_propositions, computer_sign)
     only_computer_valued = $winning_propositions.map { |each_hash| each_hash.select { |key, value| value == computer_sign } }
     count_of_each = only_computer_valued.map { |count_values_in_hash| count_values_in_hash.count }
     @indexed_spot = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
   end
 
 
-  def attack_find_spot_and_clean_up#(winning_propositions)
+  def attack_find_spot_and_clean_up(winning_propositions)
     @nil_valued_values_array = []
     @nil_valued_array_true_false = []
     @indexed_spot.each do |element|
@@ -150,7 +143,7 @@ class ComputerLogic < Admin
 
 
   def counter_attack_count_and_index
-    only_user_valued = $winning_propositions.map { |each_hash| each_hash.select { |key, value| value == $user_sign } }
+    only_user_valued = winning_propositions.map { |each_hash| each_hash.select { |key, value| value == user_sign } }
     count_of_each = only_user_valued.map { |count_values_in_hash| count_values_in_hash.count }
     @indexed_spot = count_of_each.each_with_index.select { |num, index| num == 2 }.map { |index_spot| index_spot[1] }
   end
@@ -180,7 +173,7 @@ class ComputerLogic < Admin
 
 
   def random_move#(possible_places)
-    move = $possible_places.to_a.select { |key, value| value == nil }.sample.first
+    move = possible_places.to_a.select { |key, value| value == nil }.sample.first
     return declare_computer_move(move)
   end
 

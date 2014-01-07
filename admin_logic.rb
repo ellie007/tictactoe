@@ -26,16 +26,16 @@ class Admin
    }
   end
 
-  def display_game_board
-    puts "  #{$possible_places[:a1]} | #{$possible_places[:a2]}  | #{$possible_places[:a3]}"
+  def display_game_board(possible_places)
+    puts "  #{possible_places[:a1]} | #{possible_places[:a2]}  | #{possible_places[:a3]}"
     puts "--- --- ---"
-    puts "  #{$possible_places[:b1]} | #{$possible_places[:b2]}  | #{$possible_places[:b3]}"
+    puts "  #{possible_places[:b1]} | #{possible_places[:b2]}  | #{possible_places[:b3]}"
     puts "--- --- ---"
-    puts "  #{$possible_places[:c1]} | #{$possible_places[:c2]}  | #{$possible_places[:c3]}"
+    puts "  #{possible_places[:c1]} | #{possible_places[:c2]}  | #{possible_places[:c3]}"
   end
 
   def winning_propositions
-    $winning_propositions = [
+    winning_propositions = [
     {a1:@a1, a2:@a2, a3:@a3},
     {b1:@b1, b2:@b2, b3:@b3},
     {c1:@c1, c2:@c2, c3:@c3},
@@ -49,20 +49,18 @@ class Admin
     ]
   end
 
-  def declare_computer_move(move)
-    $possible_places[move] = $computer_sign
-    puts $computer_name + " made the move: #{move}"
-    display_game_board
-    update_computer_game_board(move)
+  def declare_computer_move(move, possible_places, computer_sign, computer_name)#(move)
+    possible_places[move] = computer_sign
+    puts computer_name + " made the move: #{move}"
+    display_game_board(possible_places)
+    update_computer_game_board(move, winning_propositions, computer_sign)
     return true
-    #return computer_made_move
-    #user_turn
   end
 
-  def update_computer_game_board(move)
-    list_of_matching_arrays = $winning_propositions.select { |key, value| key.to_s.match(move.to_s) }
+  def update_computer_game_board(move, winning_propositions, computer_sign)
+    list_of_matching_arrays = winning_propositions.select { |key, value| key.to_s.match(move.to_s) }
     list_of_matching_arrays.each do |change_hash_value|
-      change_hash_value[move] = $computer_sign
+      change_hash_value[move] = computer_sign
     end
   end
 
