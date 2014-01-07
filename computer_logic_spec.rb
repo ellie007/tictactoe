@@ -54,8 +54,14 @@ describe "ComputerLogic" do
 
 
   context "pertaining to fork_play? and run_fork_detection_tests" do
-    it "should return false because not fork because not second move" do
+    xit "should return false because not second move" do
       possible_places = {a1: @a1,a2: @a2,a3: @a3,b1: @b1,b2: "X",b3: @b3,c1: @c1,c2: @c2,c3: @c3}
+
+      @test_case.fork_play?(possible_places).should == false
+    end
+
+    xit "should return false because though second move, not fork" do
+      possible_places = {a1: "X",a2: @a2,a3: @a3,b1: @b1,b2: "0",b3: @b3,c1: "X",c2: @c2,c3: @c3}
 
       @test_case.fork_play?(possible_places).should == false
     end
@@ -96,12 +102,19 @@ describe "ComputerLogic" do
 
       @test_case.fork_play?(possible_places).should == true
     end
+
+    #EITHER OR TEST; turn off second_turn instance variables and arguments
+    it "should return false value" do
+      second_turn = {a1: "X", c1: "X"}
+
+      @test_case.fork_detection_type_1(second_turn).should == false
+    end
   end
 
 
   context "pertaining to fork detection type 2" do
     xit "proves running test two OR should return one sample corner move value when there is a type 2 fork detection(a1, b2)" do
-      second_turn = second_turn = {a1: "X", b2: "X"}
+      second_turn = {a1: "X", b2: "X"}
       possible_places = {a1: "X",a2: @a2,a3: @a3,b1: @b1,b2: "X",b3: @b3,c1: @c1,c2: @c2,c3: "O"}
 
       RSpec::Matchers.define :be_one_of do |expected|
@@ -170,6 +183,13 @@ describe "ComputerLogic" do
       possible_places = {a1: "O",a2: @a2,a3: @a3,b1: @b1,b2: "X",b3: @b3,c1: @c1,c2: @c2,c3: "X"}
 
       @test_case.fork_play?(possible_places).should == true
+    end
+
+    #EITHER OR TEST; turn off second_turn instance variables and arguments
+    it "should return false value" do
+      second_turn = {a1: "X", c1: "X"}
+
+      @test_case.fork_detection_type_1(second_turn).should == false
     end
   end
 
@@ -242,6 +262,13 @@ describe "ComputerLogic" do
 
       @test_case.fork_play?(possible_places).should == true
     end
+
+    #EITHER OR TEST; turn off second_turn instance variables and arguments
+    it "should return false value" do
+      second_turn = {a1: "X", c1: "X"}
+
+      @test_case.fork_detection_type_1(second_turn).should == false
+    end
   end
 
 
@@ -251,7 +278,6 @@ describe "ComputerLogic" do
 
       @test_case.attack_count_and_index(winning_propositions).should == [5]
     end
-
   end
 
 
@@ -267,6 +293,5 @@ describe "ComputerLogic" do
       expect(@test_case.random_move(possible_places)).to be_one_of([:a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3])
     end
   end
-
 
 end

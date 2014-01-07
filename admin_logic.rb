@@ -49,18 +49,18 @@ class Admin
     ]
   end
 
-  def declare_computer_move(move, possible_places, computer_sign, computer_name)#(move)
-    possible_places[move] = computer_sign
-    puts computer_name + " made the move: #{move}"
+  def declare_computer_move(move, possible_places)#(move)
+    possible_places[move] = $computer_sign
+    puts $computer_name + " made the move: #{move}"
     display_game_board(possible_places)
-    update_computer_game_board(move, winning_propositions, computer_sign)
+    update_computer_game_board(move, winning_propositions)
     return true
   end
 
-  def update_computer_game_board(move, winning_propositions, computer_sign)
+  def update_computer_game_board(move, winning_propositions)
     list_of_matching_arrays = winning_propositions.select { |key, value| key.to_s.match(move.to_s) }
     list_of_matching_arrays.each do |change_hash_value|
-      change_hash_value[move] = computer_sign
+      change_hash_value[move] = $computer_sign
     end
   end
 

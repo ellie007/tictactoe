@@ -23,10 +23,10 @@ class ComputerLogic < Admin
     check_center = @first_turn.keys.first
     if check_center == :b2
       move = { a1: @a1,a3: @a3, c1: @c1,c3: @c3 }.keys.sample
-      #return declare_computer_move(move)
+      return declare_computer_move(move)
     else
       move = :b2
-      #return declare_computer_move(move)
+      return declare_computer_move(move)
     end
   end
 
@@ -54,8 +54,8 @@ class ComputerLogic < Admin
   end
 
   #if the user is trying to do a fork from two corners, need to go in edge
-  def fork_detection_type_1#(second_turn)
-    if @second_turn.keys == [:a1, :c3] || @second_turn.keys == [:a3, :c1]
+  def fork_detection_type_1(second_turn)
+    if second_turn.keys == [:a1, :c3] || second_turn.keys == [:a3, :c1]
       move = { a2:@a2, b3:@b3, c2:@c2, b1:@b1 }.keys.sample
       #return declare_computer_move(move)
     else
@@ -65,9 +65,9 @@ class ComputerLogic < Admin
 
 
   #if the user is trying to do a fork from a center and a corner, need to go in corner
-  def fork_detection_type_2#(second_turn, possible_places)
-    if @second_turn.keys == [:a1,:b2] || @second_turn.keys == [:a3,:b2] || @second_turn.keys == [:b2, :c1] || @second_turn.keys == [:b2,:c3]
-      var = @possible_places.select { |key, value| value ==nil }.keys & [:a1, :a3, :c1, :c3]
+  def fork_detection_type_2(second_turn, possible_places)
+    if second_turn.keys == [:a1,:b2] || second_turn.keys == [:a3,:b2] || second_turn.keys == [:b2, :c1] || second_turn.keys == [:b2,:c3]
+      var = possible_places.select { |key, value| value ==nil }.keys & [:a1, :a3, :c1, :c3]
       move = var.sample
       #return declare_computer_move(move)
     else
@@ -77,11 +77,11 @@ class ComputerLogic < Admin
 
 
   #if a user is trying to do a fork from an edge and a corner, need to go in adjacent corners
-  def fork_detection_type_3#(second_turn)
-    if @second_turn.keys == [:a1,:c2] || @second_turn.keys == [:a3,:c2]
+  def fork_detection_type_3(second_turn)
+    if second_turn.keys == [:a1,:c2] || second_turn.keys == [:a3,:c2]
       move = [:c1,:c3].sample
       #return declare_computer_move(move)
-    elsif @second_turn.keys == [:a2,:c1] || @second_turn.keys == [:a2,:c3]
+    elsif second_turn.keys == [:a2,:c1] || second_turn.keys == [:a2,:c3]
       move = [:a1,:a3].sample
       #return declare_computer_move(move)
     else
