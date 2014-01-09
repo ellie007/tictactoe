@@ -24,10 +24,27 @@ describe "ComputerLogic" do
   end
 
   context "pertaining to computer_turn" do
+    it "should be cascading to the player_first_turn? and computer_first_move methods" do
+      possible_places = {a1: "X",a2: @a2,a3: @a3,b1: @b1,b2: @b2,b3: @b3,c1: @c1,c2: @c2,c3: @c3}
+      winning_propositions = nil
+
+      @test_case.computer_turn(possible_places, winning_propositions).should == :b2
+    end
+
+     it "should find a empty cell to make a random move" do
+      possible_places = {a1: @a1,a2: @a2,a3: @a3,b1: @b1,b2: @b2,b3: @b3,c1: @c1,c2: @c2,c3: @c3}
+
+      RSpec::Matchers.define :be_one_of do |expected|
+        match do |actual|
+          expected.include?(actual)
+        end
+      end
+      expect(@test_case.random_move(possible_places)).to be_one_of([:a1, :a2, :a3, :b1, :b2, :b3, :c1, :c2, :c3])
+    end
   end
 
 
-  context "pertaining to player_first_turn?" do
+  context "pertaining to player_first_turn? and computer_first_move" do
     it "should: if player picks corner then computer picks center" do
       possible_places = {a1: "X",a2: @a2,a3: @a3,b1: @b1,b2: @b2,b3: @b3,c1: @c1,c2: @c2,c3: @c3}
 
@@ -54,13 +71,13 @@ describe "ComputerLogic" do
 
 
   context "pertaining to fork_play? and run_fork_detection_tests" do
-    xit "should return false because not second move" do
+    it "should return false because not second move" do
       possible_places = {a1: @a1,a2: @a2,a3: @a3,b1: @b1,b2: "X",b3: @b3,c1: @c1,c2: @c2,c3: @c3}
 
       @test_case.fork_play?(possible_places).should == false
     end
 
-    xit "should return false because though second move, not fork" do
+    it "should return false because though second move, not fork" do
       possible_places = {a1: "X",a2: @a2,a3: @a3,b1: @b1,b2: "0",b3: @b3,c1: "X",c2: @c2,c3: @c3}
 
       @test_case.fork_play?(possible_places).should == false
@@ -104,7 +121,7 @@ describe "ComputerLogic" do
     end
 
     #EITHER OR TEST; turn off second_turn instance variables and arguments
-    it "should return false value" do
+    xit "should return false value" do
       second_turn = {a1: "X", c1: "X"}
 
       @test_case.fork_detection_type_1(second_turn).should == false
@@ -186,7 +203,7 @@ describe "ComputerLogic" do
     end
 
     #EITHER OR TEST; turn off second_turn instance variables and arguments
-    it "should return false value" do
+    xit "should return false value" do
       second_turn = {a1: "X", c1: "X"}
 
       @test_case.fork_detection_type_1(second_turn).should == false
@@ -264,7 +281,7 @@ describe "ComputerLogic" do
     end
 
     #EITHER OR TEST; turn off second_turn instance variables and arguments
-    it "should return false value" do
+    xit "should return false value" do
       second_turn = {a1: "X", c1: "X"}
 
       @test_case.fork_detection_type_1(second_turn).should == false
@@ -272,17 +289,38 @@ describe "ComputerLogic" do
   end
 
 
-  context "pertaining to attack method" do
-    xit "should return the index values" do
-      winning_propositions=[{:a1=>"X", :a2=>nil, :a3=>"O"}, {:b1=>nil, :b2=>"X", :b3=>nil}, {:c1=>nil, :c2=>nil, :c3=>"O"}, {:a1=>"X", :b1=>nil, :c1=>nil}, {:a2=>nil, :b2=>"X", :c2=>nil}, {:a3=>"O", :b3=>nil, :c3=>"O"}, {:a1=>"X", :b2=>"X", :c3=>"O"}, {:a3=>"O", :b2=>"X", :c1=>nil}]
+  context "pertaining to attack" do
+    it "should go through all three function and return the move value" do
+      winning_propositions=[{:a1=>"X", :a2=>"O", :a3=>"X"}, {:b1=>"O", :b2=>"O", :b3=>"X"}, {:c1=>"X", :c2=>nil, :c3=>nil}, {:a1=>"X", :b1=>"O", :c1=>"X"}, {:a2=>"O", :b2=>"O", :c2=>nil}, {:a3=>"X", :b3=>"X", :c3=>nil}, {:a1=>"X", :b2=>"O", :c3=>nil}, {:a3=>"X", :b2=>"O", :c1=>"X"}]
 
-      @test_case.attack_count_and_index(winning_propositions).should == [5]
+      @test_case.attack(winning_propositions).should == :c2
+    end
+
+    it "should return false value" do
+      winning_propositions=[{:a1=>"O", :a2=>"X", :a3=>"O"}, {:b1=>nil, :b2=>"X", :b3=>nil}, {:c1=>"X", :c2=>"O", :c3=>"X"}, {:a1=>"O", :b1=>nil, :c1=>"X"}, {:a2=>"X", :b2=>"X", :c2=>"O"}, {:a3=>"O", :b3=>nil, :c3=>"X"}, {:a1=>"O", :b2=>"X", :c3=>"X"}, {:a3=>"O", :b2=>"X", :c1=>"X"}]
+
+      @test_case.attack(winning_propositions).should == false
     end
   end
 
 
-  context "pertaining to random move method" do
-    xit "should find a empty cell to make a random move" do
+  context "pertaining to counter attack" do
+    it "should go through all three function and return the move value" do
+      winning_propositions=[{:a1=>"X", :a2=>"X", :a3=>"O"}, {:b1=>nil, :b2=>"O", :b3=>nil}, {:c1=>"X", :c2=>nil, :c3=>nil}, {:a1=>"X", :b1=>nil, :c1=>"X"}, {:a2=>"X", :b2=>"O", :c2=>nil}, {:a3=>"O", :b3=>nil, :c3=>nil}, {:a1=>"X", :b2=>"O", :c3=>nil}, {:a3=>"O", :b2=>"O", :c1=>"X"}]
+
+      @test_case.counter_attack(winning_propositions).should == :b1
+    end
+
+    it "should return false value" do
+      winning_propositions=[{:a1=>"O", :a2=>"X", :a3=>"O"}, {:b1=>nil, :b2=>"X", :b3=>nil}, {:c1=>"X", :c2=>"O", :c3=>"X"}, {:a1=>"O", :b1=>nil, :c1=>"X"}, {:a2=>"X", :b2=>"X", :c2=>"O"}, {:a3=>"O", :b3=>nil, :c3=>"X"}, {:a1=>"O", :b2=>"X", :c3=>"X"}, {:a3=>"O", :b2=>"X", :c1=>"X"}]
+
+      @test_case.counter_attack(winning_propositions).should == false
+    end
+  end
+
+
+  context "pertaining to random move" do
+    it "should find a empty cell to make a random move" do
       possible_places = {a1: @a1,a2: @a2,a3: @a3,b1: @b1,b2: @b2,b3: @b3,c1: @c1,c2: @c2,c3: @c3}
 
       RSpec::Matchers.define :be_one_of do |expected|
